@@ -1,4 +1,4 @@
-resouce "aws_resource_group" "honeypot_sg"{
+resouce "aws_security_group" "honeypot_sg"{
         name        = "honeypot-sg"
         description = "Security group for honeypot EC2 instance"
         vpc_id      = aws_vpc.honeypot_vpc.id
