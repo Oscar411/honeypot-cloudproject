@@ -1,0 +1,55 @@
+data "aws_iam_policy_document" "lambda_assume_role" {
+    statement {
+        effect = "Allow"
+
+        principles {
+            type = "Service"
+            identifiers = ["lamba.amazonaws.com"]
+        }
+
+        actions = ["sts:AssumeRole"]
+    }
+}
+
+resource "aws_iam_role" "lamba_s3_role" {
+    name               = "${var.name}-lambda-role"
+    assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
+    tags               = var.tags
+}
+
+data "aws_iam_policy_document" "lambda_inline" {
+    statement {
+        sid    = "S3WriteEvidence"
+        effect = "Allow"
+
+        actions = [
+            "s3:PutObject",
+            "s3:PutObjectAcl",
+            "s3:ListBucket"
+        ]
+
+        resources = [
+            "arn:aws:s3:::honeypot-evidence-and-reports",
+            "arn:aws:s3:::honeypot-evidence-and-reports/*"
+    ]
+  }
+
+  statement {
+    sid    = "CloudWatchLogs"
+    effect = "Allow"
+
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy" "lambda_policy" {
+  name   = "${var.name}-lambda-policy"
+  role   = aws_iam_role.lambda_s3_role.id
+  policy = data.aws_iam_policy_document.lambda_inline.json
+} 
