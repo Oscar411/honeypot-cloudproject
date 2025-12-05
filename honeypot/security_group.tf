@@ -17,6 +17,7 @@ resource "aws_security_group_rule" "ingress_ssh_admin" {
   cidr_blocks              = [var.allowed_cidr]
   security_group_id        = aws_security_group.honeypot_sg.id
   descriiption             = "Admin SSH (monitoring/maintenance)"
+}
 
 resource "aws_security_group_rule" "ingress_cowrie_ssh" {
   type                     = "ingress"

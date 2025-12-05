@@ -56,7 +56,7 @@ resource "aws_iam_role_policy" "ec2_policy" {
 }
 
 resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "${var.name}-instance-profile 
+  name = "${var.name}-instance-profile"
   role = aws_iam_role.ec2_cowrie_role.name
 }
 
